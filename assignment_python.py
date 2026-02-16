@@ -1077,10 +1077,10 @@ def print_bill():
     quantity = int(input("Enter quantity: "))
     price = float(input("Enter price per item: "))
     print("-" * 50)
-    print("|{:^48}|".format("Welcome Hotel Name"))
+    print("|{:^48}|".format("Welcome Hotel Rovin"))
     print("-" * 50)
     total = quantity * price
-    print("|{:<7} {:<15} {:<18} {:<5}|".format("sr", "Menu", "qunt", "price"))
+    print("|{:<7} {:<15} {:<18} {:<5}|".format("sr", "Menu", "quant", "price"))
     print("-" * 50)
     print("|{:<7} {:<15} {:<18} {:<5}|".format(1, snack, quantity, total))
     print("-" * 50)
@@ -1088,6 +1088,7 @@ def print_bill():
     print("-" * 50)
 
 print_bill()
+
 
 
 
