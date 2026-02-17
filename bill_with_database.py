@@ -8,14 +8,13 @@ driver = '{ODBC Driver 17 for SQL Server}'
 class OrderException(Exception):
     pass 
 class Admin:
-    @staticmethod
-    def connect_db():
+    def connect_db(s):
         try:
-            conn = pyodbc.connect(f'DRIVER={driver};'
+            s.conn = pyodbc.connect(f'DRIVER={driver};'
                                 f'SERVER={server};'
                                 f'DATABASE={database};'
                                 f'Trusted_Connection=yes;')
-            return conn
+            return s.conn
         except Exception as e:
             print(f"Error: {e}")
         except:
@@ -107,6 +106,8 @@ class Order(Admin):
             self.display_bill(cursor,cusid)
         except OrderException as e:
             print(e)
+        finally:
+            self.conn.close()
 
 od = input("Do you want to order something:(Y/N):")
 if od == "Y":
