@@ -212,7 +212,7 @@ class StudentBilling:
         self.annual_food = 2000
         self.annual_transport = 0
 
-    def calculate_subject_cost(self):
+    def GetSubject(self):
 
         subject = input("Enter your subject: ")
 
@@ -243,7 +243,7 @@ class StudentBilling:
         else:
             print("Subject must be alphabets")
 
-    def calculate_hostel(self):
+    def GetHostel(self):
 
         hostel = input("Want accommodation?? (Y/N): ").upper()
 
@@ -257,7 +257,7 @@ class StudentBilling:
         else:
             print("Non alpha value inserted in hostel")
 
-    def calculate_food(self):
+    def GetFood(self):
 
         food = input("Want food?? (Y/N): ").upper()
 
@@ -273,7 +273,7 @@ class StudentBilling:
         else:
             print("Food must be Y or N")
 
-    def calculate_transport(self):
+    def GetTransport(self):
 
         transport = input("Transport for sem or full year (1/2): ")
 
@@ -298,10 +298,10 @@ class StudentBilling:
 
 student = StudentBilling()
 
-student.calculate_subject_cost()
-student.calculate_hostel()
-student.calculate_food()
-student.calculate_transport()
+student.GetSubject()
+student.GetHostel()
+student.GetFood()
+student.GetTransport()
 student.generate_bill()
 
 #q14
@@ -333,7 +333,6 @@ def ask_for_books(books, notebooks):
             grade = '9th-10th'
         else:
             raise InvalidBooksException("Invalid standard")
-
         print("\nAvailable textbooks for this standard:")
 
         for sub in books:
