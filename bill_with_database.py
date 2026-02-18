@@ -16,47 +16,61 @@ class Admin:
                                 f'DATABASE={database};'
                                 f'Trusted_Connection=yes;')
             return conn
-        except Exception as e:
-            print(f"Error: {e}")
         except:
             print(sys.exc_info())
 
 class Order:
     def generate_bill(s,cursor,cusid):
-        s.i = 1
-        final_amt = 0
-        query = "SELECT m.menu_name,o.quantity,m.menu_price from Orders o Join menu m on o.menu_id = m.menu_id where o.customer_id = ?"
-        d = cursor.execute(query,cusid)
-        print("{0:<30}{1:<10}".format("Bill for user id: ",cusid))
-        print("{0:<5}{1:<20}{2:<10}{3:<10}".format("sr","item","quantity","price"))
-        for row in d:
-            total = row[1]*row[2]
-            print("{0:<5}{1:<20}{2:<10}{3:<10}".format(s.i,row[0],row[1],total))
-            s.i = s.i + 1
-            final_amt = final_amt + total
-        print("{0:<40}{1:<10}".format("Total Bill Amt:",final_amt))
-
-    def print_bill(s,cursor,cusid,phno):
-        dpath = "C:/Users/Rovin/OneDrive/Desktop/MCA/newone"
-        timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
-        file = f'Bill_{phno}.txt'
-        file_name = os.path.join(dpath,file)
-        with open(file_name, 'w') as f:
-            f.write(timestamp+'\n')
-            f.write(f"Bill for user id: {cusid}\n")
+        try:
+            s.i = 1
+            final_amt = 0
             query = "SELECT m.menu_name,o.quantity,m.menu_price from Orders o Join menu m on o.menu_id = m.menu_id where o.customer_id = ?"
             d = cursor.execute(query,cusid)
-            f.write("{0:<5}{1:<20}{2:<10}{3:<10}\n".format("sr","item","quantity","price"))
-            final_amt = 0
-            s.i = 1
+            print(f"{'-'*45}")
+            print("{0:<30}{1:<5}".format("Bill for user id: ",cusid))
+            print(f"{'-'*45}")
+            print("{0:<5}{1:<20}{2:<10}{3:<10}".format("sr","item","quantity","price"))
+            print(f"{'-'*45}")
             for row in d:
                 total = row[1]*row[2]
-                f.write("{0:<5}{1:<20}{2:<10}{3:<10}\n".format(s.i,row[0],row[1],total))
+                print("{0:<5}{1:<20}{2:<10}{3:<10}".format(s.i,row[0],row[1],total))
                 s.i = s.i + 1
                 final_amt = final_amt + total
-            f.write("{0:<30}{1:<10}\n".format("Total Bill Amt:",final_amt))
-        print("Saved file as:",file_name)
-        os.startfile(file_name)
+            print(f"{'-'*45}")
+            print("{0:<35}{1:<5}".format("Total Bill Amt:",final_amt))
+            print(f"{'-'*45}")
+        except:
+            print(sys.exc_info())
+
+    def print_bill(s,cursor,cusid,phno):
+        try:
+            dpath = "C:/Users/Rovin/OneDrive/Desktop/MCA/newone"
+            timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
+            file = f'Bill_{phno}.txt'
+            file_name = os.path.join(dpath,file)
+            with open(file_name, 'w') as f:
+                f.write(timestamp+'\n')
+                f.write(f'{'-'*45}'+'\n')
+                f.write(f"Bill for user id: {cusid}\n")
+                query = "SELECT m.menu_name,o.quantity,m.menu_price from Orders o Join menu m on o.menu_id = m.menu_id where o.customer_id = ?"
+                d = cursor.execute(query,cusid)
+                f.write(f'{'-'*45}'+'\n')
+                f.write("{0:<5}{1:<20}{2:<10}{3:<10}\n".format("sr","item","quantity","price"))
+                f.write(f'{'-'*45}'+'\n')
+                final_amt = 0
+                s.i = 1
+                for row in d:
+                    total = row[1]*row[2]
+                    f.write("{0:<5}{1:<20}{2:<10}{3:<10}\n".format(s.i,row[0],row[1],total))
+                    s.i = s.i + 1
+                    final_amt = final_amt + total
+                f.write(f'{'-'*45}'+'\n')
+                f.write("{0:<30}{1:<10}\n".format("Total Bill Amt:",final_amt))
+                f.write(f'{'-'*45}'+'\n')
+            print("Saved file as:",file_name)
+            os.startfile(file_name)
+        except:
+            print(sys.exc_info())
 
     def create_id(self,cursor,cusid):
         cursor.execute("INSERT INTO Customers(customer_id) Values(?)",(cusid,))
@@ -74,7 +88,7 @@ class Order:
 
     def validname(s):
         od1 = input("Enter menu item:")
-        if od1.isalpha() or ' ' in od1:
+        if od1.isalpha():
             return od1
         else:
             raise OrderException("Value is not in valid format")
