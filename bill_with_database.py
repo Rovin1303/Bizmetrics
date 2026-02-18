@@ -2,7 +2,7 @@ import os
 import pyodbc
 import datetime
 import sys
-server = 'DESKTOP-F4N5O36\SQLEXPRESS' 
+server = r'DESKTOP-F4N5O36\SQLEXPRESS' 
 database = 'hotel_bill'
 driver = '{ODBC Driver 17 for SQL Server}'
 class OrderException(Exception):
@@ -100,7 +100,6 @@ class Order:
             c = cursor.execute("Select count(*) from Customers").fetchone()[0]
             cusid = c + 1
             self.create_id(cursor,cusid)
-            conn.commit()
             val = 1
             while val == 1:
                 query = "SELECT * from hotel_bill.dbo.menu"
@@ -116,9 +115,13 @@ class Order:
                         menu_id = row[0]
                         customer_id = cusid
                         self.insert_order(cursor,menu_id,customer_id,quantity,timestamp)
-                        conn.commit()
+                    else:
+                        raise OrderException("Please enter valid menu")
                 val = int(input("Want to order more? 1 for yes and 0 for no:"))
+            conn.commit()
             self.display_bill(cursor,cusid)
+        except OrderException as e:
+            print(e)
         except:
             print(sys.exc_info())
         finally:
