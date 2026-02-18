@@ -132,7 +132,7 @@ class Order(Admin):
         except OrderException as e:
             print(e)
         finally:
-            self.conn.close()
+            conn.close()
 
 od = input("Do you want to order something:(Y/N):")
 if od == "Y":
