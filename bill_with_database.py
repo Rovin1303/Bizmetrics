@@ -8,26 +8,21 @@ driver = '{ODBC Driver 17 for SQL Server}'
 class OrderException(Exception):
     pass 
 class Admin:
-    
-    def connect_db(s):
-        '''
-        doc: this function is used to connect to the database
-        '''
+    @staticmethod
+    def connect_db():
         try:
-            s.conn = pyodbc.connect(f'DRIVER={driver};'
+            conn = pyodbc.connect(f'DRIVER={driver};'
                                 f'SERVER={server};'
                                 f'DATABASE={database};'
                                 f'Trusted_Connection=yes;')
-            return s.conn
+            return conn
         except Exception as e:
             print(f"Error: {e}")
         except:
             print(sys.exc_info())
 
+class Order:
     def generate_bill(s,cursor,cusid):
-        '''
-        doc: this function is used to generate the bill in the console
-        '''
         s.i = 1
         final_amt = 0
         query = "SELECT m.menu_name,o.quantity,m.menu_price from Orders o Join menu m on o.menu_id = m.menu_id where o.customer_id = ?"
@@ -42,9 +37,6 @@ class Admin:
         print("{0:<40}{1:<10}".format("Total Bill Amt:",final_amt))
 
     def print_bill(s,cursor,cusid,phno):
-        '''
-        doc: this function is used to generate the bill and save it as a text file
-        '''
         dpath = "C:/Users/Rovin/OneDrive/Desktop/MCA/newone"
         timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
         file = f'Bill_{phno}.txt'
@@ -66,23 +58,13 @@ class Admin:
         print("Saved file as:",file_name)
         os.startfile(file_name)
 
-class Order(Admin):
     def create_id(self,cursor,cusid):
-        '''
-        doc: function to insert a new customer id in db
-        '''
         cursor.execute("INSERT INTO Customers(customer_id) Values(?)",(cusid,))
 
     def insert_order(self,cursor,menu_id,customer_id,quantity,timestamp):
-        '''
-        doc: function to insert order data in db
-        '''
         cursor.execute("INSERT INTO Orders(quantity,menu_id,timestamp,customer_id) Values(?,?,?,?)",(quantity,menu_id,timestamp,customer_id))
 
     def display_bill(self,cursor,cusid):
-        '''
-        doc:this function asks for bill generation and type of bill.
-        '''
         doyou = input("Do you want to print the bill(1) or display the bill(0)?:")
         phno = input("Please Provide phone number:")
         if doyou == '0':
@@ -91,9 +73,6 @@ class Order(Admin):
             self.print_bill(cursor,cusid,phno)
 
     def validname(s):
-        '''
-        do:for validation of menu item name
-        '''
         od1 = input("Enter menu item:")
         if od1.isalpha() or ' ' in od1:
             return od1
@@ -101,11 +80,8 @@ class Order(Admin):
             raise OrderException("Value is not in valid format")
 
     def get_order_info(self):
-        '''
-        doc: this function is used to get order info from the customer and insert it in the database
-        '''
         try:
-            conn = super().connect_db()
+            conn = Admin.connect_db()
             cursor = conn.cursor()
             c = cursor.execute("Select count(*) from Customers").fetchone()[0]
             cusid = c + 1
@@ -129,8 +105,8 @@ class Order(Admin):
                         conn.commit()
                 val = int(input("Want to order more? 1 for yes and 0 for no:"))
             self.display_bill(cursor,cusid)
-        except OrderException as e:
-            print(e)
+        except:
+            print(sys.exc_info())
         finally:
             conn.close()
 
@@ -138,7 +114,5 @@ od = input("Do you want to order something:(Y/N):")
 if od == "Y":
     storder = Order()
     storder.get_order_info()
-    storder1 = Order()
-    storder1.get_order_info()
 else:
     print("Thank you for visiting")
