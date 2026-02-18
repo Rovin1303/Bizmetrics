@@ -1,4 +1,5 @@
 import sys
+import os
 class ValidationException(Exception):
     pass
 
@@ -103,13 +104,28 @@ class StudentBilling:
         
         Bill is created with the details collected from above functions
         """
-        total = self.annual_subject_cost+ self.annual_transport+ self.annual_food + self.annual_hostel
-        print("\nTotal Bill of student:")
-        print("Subject Cost:", self.annual_subject_cost)
-        print("Accommodation Cost:", self.annual_hostel)
-        print("Transport Cost:", self.annual_transport)
-        print("Annual Food:", self.annual_food)
-        print("Total Cost:", total)
+        try:
+            total = self.annual_subject_cost+ self.annual_transport+ self.annual_food + self.annual_hostel
+            print("\nTotal Bill of student:")
+            print("Subject Cost:", self.annual_subject_cost)
+            print("Accommodation Cost:", self.annual_hostel)
+            print("Transport Cost:", self.annual_transport)
+            print("Annual Food:", self.annual_food)
+            print("Total Cost:", total)
+            doyou = input("Do you want to print the bill")
+            if doyou == 'Y':
+                nm = input("Enter name:")
+                dpath = r"C:/Users/Rovin/OneDrive/Desktop/MCA/student_bills"
+                filen = f"Bill_{nm}.txt"
+                filename = os.path.join(dpath,filen)
+                with open(filename,'w') as f:
+                    f.write("{0:<20}{1:10}\n".format("Subject Cost:",self.annual_subject_cost))
+                    f.write("{0:<15}{1:15}\n".format("Accommodation Cost:", self.annual_hostel))
+                    f.write("{0:<15}{1:15}\n".format("Transport Cost:", self.annual_transport))
+                    f.write("{0:<15}{1:15}\n".format("Annual Food:", self.annual_food))
+                    f.write("{0:<15}{1:15}\n".format("Total Cost:", total))
+        except:
+            print(sys.exc_info())
 try:
     student = StudentBilling()
     student.GetSubject()
