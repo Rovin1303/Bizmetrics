@@ -4,6 +4,11 @@ class ValidationException(Exception):
 
 class StudentBilling:
     def __init__(self):
+        '''
+        Docstring for __init__
+        
+        setting instance variables for the student object
+        '''
         self.subject_list = ['HR', 'Finance', 'Marketing', 'DS']
         self.annual_subject_cost = 200000
         self.annual_hostel = 0
@@ -11,6 +16,11 @@ class StudentBilling:
         self.annual_transport = 0
 
     def GetSubject(self):
+        '''
+        Docstring for GetSubject
+        
+        :Course the student wants to register and whether wants analytics or not
+        '''
         subject = input("Enter your subject: ")
         if subject.isalpha():
             if subject == 'HR':
@@ -36,6 +46,11 @@ class StudentBilling:
             raise ValidationException("Subject must be alphabets")
 
     def GetHostel(self):
+        """
+        Docstring for GetHostel
+        
+        :Ask the student whether wants accomadation 
+        """
         hostel = input("Want accommodation?? (Y/N): ").upper()
         if hostel.isalpha():
             if hostel == 'Y':
@@ -43,11 +58,16 @@ class StudentBilling:
             elif hostel == 'N':
                 self.annual_hostel = 0
             else:
-                raise ValidationException("Please respond in Y or N")
+                raise ValidationException("answer in Y or N")
         else:
             raise ValidationException("Non alpha value inserted in hostel")
 
     def GetFood(self):
+        '''
+        Docstring for GetFood
+        
+        :This function checks whether student wants food and how many months
+        '''
         food = input("Want food?? (Y/N): ").upper()
         if food.isalpha():
             if food == 'Y':
@@ -62,6 +82,11 @@ class StudentBilling:
             raise ValidationException("Food should be Y or N")
 
     def GetTransport(self):
+        '''
+        Docstring for GetTransport
+        
+        This function checks whether student wants Transport for sem or full year
+        '''
         transport = input("Transport for sem or full year (1/2): ")
         if transport.isdigit():
             transport = int(transport)
@@ -73,6 +98,11 @@ class StudentBilling:
             raise ValidationException("Digit is required")
 
     def generate_bill(self):
+        """
+        Docstring for generate_bill
+        
+        Bill is created with the details collected from above functions
+        """
         total = self.annual_subject_cost+ self.annual_transport+ self.annual_food + self.annual_hostel
         print("\nTotal Bill of student:")
         print("Subject Cost:", self.annual_subject_cost)
