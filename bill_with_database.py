@@ -115,8 +115,6 @@ class Order:
                         menu_id = row[0]
                         customer_id = cusid
                         self.insert_order(cursor,menu_id,customer_id,quantity,timestamp)
-                    else:
-                        raise OrderException("Please enter valid menu")
                 val = int(input("Want to order more? 1 for yes and 0 for no:"))
             conn.commit()
             self.display_bill(cursor,cusid)
