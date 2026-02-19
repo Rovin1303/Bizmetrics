@@ -203,106 +203,144 @@ print("Salary after increment:",salary_aft_incre)
 
 
 #Q13
-class StudentBilling:
+import sys
+import os
+class ValidationException(Exception):
+    pass
 
+class StudentBilling:
     def __init__(self):
-        self.subject_list = ['HR', 'Finance', 'Marketing', 'DS']
-        self.annual_subject_cost = 200000
-        self.annual_hostel = 0
-        self.annual_food = 2000
-        self.annual_transport = 0
+        '''
+        Docstring for __init__
+        
+        setting instance variables for the student object
+        '''
+        self.totalsub = 200000
+        self.totalhostel = 0
+        self.totalfood = 2000
+        self.totaltransport = 0
 
     def GetSubject(self):
-
+        '''
+        Docstring for GetSubject
+        
+        :Course the student wants to register and whether wants analytics or not
+        '''
         subject = input("Enter your subject: ")
-
         if subject.isalpha():
             if subject == 'HR':
-                analytics = input("Want analytics?? (Y/N): ").upper()
+                analytics = input("Want analytics?(Y/N): ").upper()
                 if analytics == 'Y':
-                    self.annual_subject_cost += 200000 * 0.10
+                    self.totalsub+= 200000 * 0.10
                 else:
-                    self.annual_subject_cost = 200000
-
+                    self.totalsub = 200000
             elif subject == 'Finance':
-                self.annual_subject_cost = 200000
+                self.totalsub = 200000
 
             elif subject == 'Marketing':
                 analytics = input("Want analytics?? (Y/N): ").upper()
                 if analytics == 'Y':
-                    self.annual_subject_cost += 200000 * 0.10
+                    self.totalsub += 200000 * 0.10
                 else:
-                    self.annual_subject_cost = 200000
-
+                    self.totalsub = 200000
             elif subject == 'DS':
-                self.annual_subject_cost = 200000
-
+                self.totalsub = 200000
             else:
-                print("Subject is not valid")
-
+                raise ValidationException("Subject is not valid")
         else:
-            print("Subject must be alphabets")
+            raise ValidationException("Subject must be alphabets")
 
     def GetHostel(self):
-
+        """
+        Docstring for GetHostel
+        
+        :Ask the student whether wants accomadation 
+        """
         hostel = input("Want accommodation?? (Y/N): ").upper()
-
         if hostel.isalpha():
             if hostel == 'Y':
-                self.annual_hostel = 200000
+                self.totalhostel = 200000
             elif hostel == 'N':
-                self.annual_hostel = 0
+                self.totalhostel = 0
             else:
-                print("Please respond in Y or N")
+                raise ValidationException("answer in Y or N")
         else:
-            print("Non alpha value inserted in hostel")
+            raise ValidationException("Non alpha value inserted in hostel")
 
     def GetFood(self):
-
+        '''
+        Docstring for GetFood
+        
+        :This function checks whether student wants food and how many months
+        '''
         food = input("Want food?? (Y/N): ").upper()
-
         if food.isalpha():
             if food == 'Y':
                 food1 = int(input("Want food how many months?? "))
                 if food1 < 0 or food1 > 24:
-                    print("Months invalid")
+                    raise ValidationException("Months invalid")
                 else:
-                    self.annual_food = self.annual_food * food1
+                    self.totalfood = self.totalfood * food1
             else:
-                self.annual_food = 0
+                self.totalfood = 0
         else:
-            print("Food must be Y or N")
+            raise ValidationException("Food should be Y or N")
 
     def GetTransport(self):
-
+        '''
+        Docstring for GetTransport
+        
+        This function checks whether student wants Transport for sem or full year
+        '''
         transport = input("Transport for sem or full year (1/2): ")
-
         if transport.isdigit():
             transport = int(transport)
             if transport == 1 or transport == 2:
-                self.annual_transport = 13000 * transport
+                self.totaltransport = 13000 * transport
             else:
-                print("Enter 1 for sem or 2 for full year")
+                raise ValidationException("Enter 1 for sem or 2 for full year")
         else:
-            print("Digit is required")
+            raise ValidationException("Digit is required")
 
     def generate_bill(self):
-
-        total = self.annual_subject_cost+ self.annual_transport+ self.annual_food + self.annual_hostel
-        print("\nTotal Bill of student:")
-        print("Subject Cost:", self.annual_subject_cost)
-        print("Accommodation Cost:", self.annual_hostel)
-        print("Transport Cost:", self.annual_transport)
-        print("Annual Food:", self.annual_food)
-        print("Total Cost:", total)
-
-student = StudentBilling()
-
-student.GetSubject()
-student.GetHostel()
-student.GetFood()
-student.GetTransport()
-student.generate_bill()
+        """
+        Docstring for generate_bill
+        
+        Bill is created with the details collected from above functions
+        """
+        try:
+            total = self.totalsub+ self.totaltransport+ self.totalfood + self.totalhostel
+            print("\nTotal Bill of student:")
+            print("Subject Cost:", self.totalsub)
+            print("Accommodation Cost:", self.totalhostel)
+            print("Transport Cost:", self.totaltransport)
+            print("Annual Food:", self.totalfood)
+            print("Total Cost:", total)
+            doyou = input("Do you want to print the bill")
+            if doyou == 'Y':
+                nm = input("Enter name:")
+                dpath = r"C:/Users/Rovin/OneDrive/Desktop/MCA/student_bills"
+                filen = f"Bill_{nm}.txt"
+                filename = os.path.join(dpath,filen)
+                with open(filename,'w') as f:
+                    f.write("{0:<20}{1:10}\n".format("Subject Cost:",self.totalsub))
+                    f.write("{0:<15}{1:15}\n".format("Accommodation Cost:", self.totalhostel))
+                    f.write("{0:<15}{1:15}\n".format("Transport Cost:", self.totaltransport))
+                    f.write("{0:<15}{1:15}\n".format("Annual Food:", self.totalfood))
+                    f.write("{0:<15}{1:15}\n".format("Total Cost:", total))
+        except:
+            print(sys.exc_info())
+try:
+    student = StudentBilling()
+    student.GetSubject()
+    student.GetHostel()
+    student.GetFood()
+    student.GetTransport()
+    student.generate_bill()
+except ValidationException as e:
+    print(e)
+except:
+    print(sys.exc_info())
 
 #q14
 import sys
@@ -447,8 +485,8 @@ tendors = {
 }
 def calc():
 
-    principal = float(input("Enter principal amount: "))
-    days = int(input("Enter number of days for FD: "))
+    principal = float(input("Principal: "))
+    days = int(input("Days:"))
 
     slab = None
     for key in tendors:
@@ -460,8 +498,7 @@ def calc():
     if not slab:
         print("Invalid tenure")
         return
-    
-    category = input("Enter category (public/senior): ")
+    category = input("Enter category(public/senior): ")
 
     if category not in ["public", "senior"]:
         print("Invalid category")
@@ -586,29 +623,32 @@ print(combinations)
 
 # Q24
 # '''
+from datetime import date
 name = input("Enter username:")
-day = input("Enter dob day:")
-month = input("Enter dob month:")
-year = input("Enter dob year:")
-if name.isalpha() and day.isdigit() and month.isdigit() and year.isdigit() :
-    password = name[:4]+'@'+day + month
-else:
-    print("some value is not defined")
-print(password)
-
-# Q25
-name = input("Enter username:")
-day = input("Enter dob day:")
-month = input("Enter dob month:")
-year = input("Enter dob year:")
-dob = day+month+year
-if name.isalpha() and day.isdigit() and month.isdigit() and year.isdigit() :
-    if name is not "" and len(dob) == 8:
-        password = name[:4]+'@'+year
+day = int(input("Enter dob day:"))
+month = int(input("Enter dob month:"))
+year = int(input("Enter dob year:"))
+dob = date(year,month,day)
+if name.isalpha():
+    if name != " ":
+        password = name[:4]+'@'+str(dob.day) + str(dob.month)
         print(password)
 else:
     print("some value is not defined")
 
+# Q25
+from datetime import date
+name = input("Enter username:")
+day = int(input("Enter dob day:"))
+month = int(input("Enter dob month:"))
+year = int(input("Enter dob year:"))
+dob = date(year,month,day)
+if name.isalpha():
+    if name != " ":
+        password = name[:4]+'@'+str(dob.year)
+        print(password)
+else:
+    print("some value is not defined")
 # Q26
 
 for i in range(1,5):
@@ -921,7 +961,6 @@ doyou = input("Do you want to add record:")
 if doyou == 'Y':
      s1 = GetStudentInfo()
      s1.getinfo()
-
 else:
     print("Bye")
 
@@ -1067,14 +1106,14 @@ def common(l1, l2):
 
 l1 = [1, 2, 3, 4, 5]
 l2 = [3, 2, 8, 7, 9]
-print("Common elements:",common(l1, l2))
+print("Common vals:",common(l1,l2))
 
 #Q55
 
 def print_bill():
     snack = input("Enter item name: ")
     quantity = int(input("Enter quantity: "))
-    price = float(input("Enter price per item: "))
+    price = float(input("Enter price: "))
     print("-" * 50)
     print("|{:^48}|".format("Welcome Hotel Rovin"))
     print("-" * 50)
