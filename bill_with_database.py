@@ -3,7 +3,6 @@ import pyodbc
 import datetime
 import sys
 server = r'DESKTOP-F4N5O36\SQLEXPRESS' 
-database = 'hotel_bill'
 driver = '{ODBC Driver 17 for SQL Server}'
 class OrderException(Exception):
     pass 
@@ -13,7 +12,7 @@ class Admin:
         try:
             conn = pyodbc.connect(f'DRIVER={driver};'
                                 f'SERVER={server};'
-                                f'DATABASE={database};'
+                                f'DATABASE={'hotel_bill'};'
                                 f'Trusted_Connection=yes;')
             return conn
         except:
@@ -80,7 +79,7 @@ class Order:
 
     def display_bill(self,cursor,cusid):
         doyou = input("Do you want to print the bill(1) or display the bill(0)?:")
-        phno = input("Please Provide phone number:")
+        phno = input("Please Provide phone number/:")
         if doyou == '0':
             self.generate_bill(cursor,cusid)
         else:
